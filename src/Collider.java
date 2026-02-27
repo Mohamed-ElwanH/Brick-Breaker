@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public class Collider {
+public abstract class Collider {
     private int colliderWidth;
     private int colliderHeight;
     private int colliderArea;
@@ -37,7 +37,7 @@ public class Collider {
         return collider;
     }
 
-    protected void OnCollisionEnter() {}
+    public abstract void OnCollisionEnter();
 
 
 }

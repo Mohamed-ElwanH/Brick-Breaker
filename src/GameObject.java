@@ -10,23 +10,7 @@ public abstract class GameObject {
     private  Point gameObjPos;
     private int gameObjWidth;
     private int gameObjHeight;
-    public void setGameObjPos(int posX, int posY)
-    {
-        gameObjPos.x = posX;
-        gameObjPos.y = posY;
-    }
-    public Point getGameObjPos()
-    {
-        return gameObjPos;
-    }
-    public int getGameObjWidth()
-    {
-        return gameObjWidth;
-    }
-    public int getGameObjHeight()
-    {
-        return gameObjHeight;
-    }
+
     public GameObject(int posX, int posY, int width, int height, String path)
     {
 //        this.gameObjPosX = posX;
@@ -51,4 +35,25 @@ public abstract class GameObject {
         else
             throw new RuntimeException("gameObjCollider is null");
     }
+    public void setGameObjPos(int posX, int posY)
+    {
+        gameObjPos.x = posX;
+        gameObjPos.y = posY;
+    }
+    public abstract void onHit();
+    public abstract void update();
+    public Point getGameObjPos()
+    {
+        return gameObjPos;
+    }
+    public int getGameObjWidth()
+    {
+        return gameObjWidth;
+    }
+    public int getGameObjHeight()
+    {
+        return gameObjHeight;
+    }
+
+
 }

@@ -9,7 +9,10 @@ public class Ball extends GameObject{
         super(posX, posY, width, height, path);
         this.ballSpeedX = speedX;
         this.ballSpeedY = speedY;
-        this.gameObjCollider = new Collider(this.getGameObjPos().x,this.getGameObjPos().y,this.getGameObjWidth(), this.getGameObjHeight());
+        this.gameObjCollider = new BallCollider(this.getGameObjPos().x,
+                this.getGameObjPos().y,
+                this.getGameObjWidth(),
+                this.getGameObjHeight(), this);
 
     }
     public void setBallSpeed(int speedX, int speedY)
@@ -24,14 +27,51 @@ public class Ball extends GameObject{
     }
     protected void moveBall()
     {
-        int newSpeedX = this.getGameObjPos().x + ballSpeedX;
-        int newSpeedY = this.getGameObjPos().y+ ballSpeedY;
-        this.setGameObjPos(newSpeedX, newSpeedY);
+        int newBallSpeedX = this.getGameObjPos().x + ballSpeedX;
+        int newBallSpeedY = this.getGameObjPos().y+ ballSpeedY;
+        this.setGameObjPos(newBallSpeedX, newBallSpeedY);
     }
+    public void checkSideCollision(Brick brick)
+    {
+        Rectangle ballRect = this.gameObjCollider.getCollider();
+        Rectangle brickRect = brick.gameObjCollider.getCollider();
+        if(ballRect.intersects(brickRect)) {
+            double ballTop = ballRect.getMinY();
+            double ballBottom = ballRect.getMaxY();
+            double ballRight = ballRect.getMaxX();
+            double ballLeft = ballRect.getMinX();
 
+            double brickTop = brickRect.getMinY();
+            double brickBottom = brickRect.getMaxY();
+            double brickRight = brickRect.getMaxX();
+            double brickLeft = brickRect.getMinX();
+
+            //overlap relevant to the brick
+            double topOverlap = ballBottom - brickTop;
+            double bottomOverlap = brickBottom - ballTop;
+            double rightOverlap = brickRight - ballLeft;
+            double leftOverlap = ballRight - brickLeft;
+
+            //smallest overlap
+            double minOverLap = Math.min(Math.min(topOverlap, bottomOverlap), Math.min(rightOverlap, leftOverlap));
+            if (minOverLap == topOverlap || minOverLap == bottomOverlap)
+                this.setBallSpeed(ballSpeedX, -ballSpeedY);
+            if (minOverLap == rightOverlap || minOverLap == leftOverlap)
+                this.setBallSpeed(-ballSpeedX, ballSpeedY);
+
+            brick.onHit();
+        }
+    }
+    @Override
     public void update()
     {
         this.moveBall();
         updateCollider();
+    }
+
+    @Override
+    public void onHit() //called when hits the paddle
+    {
+        this.setBallSpeed(ballSpeedX, -ballSpeedY);
     }
 }
