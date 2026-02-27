@@ -4,18 +4,37 @@ import java.net.URL;
 
 public abstract class GameObject {
     protected Collider gameObjCollider;
-    protected Image gameObjSprite;
-    protected int gameObjPosX;
-    protected int gameObjPosY;
-    protected int gameObjWidth;
-    protected int gameObjHeight;
-
-    public GameObject(int posX, int posY, int width, int height)
+    protected final Image gameObjSprite;
+//    protected int gameObjPosX;
+//    protected int gameObjPosY;
+    private  Point gameObjPos;
+    private int gameObjWidth;
+    private int gameObjHeight;
+    public void setGameObjPos(int posX, int posY)
     {
-        this.gameObjPosX = posX;
-        this.gameObjPosY = posY;
+        gameObjPos.x = posX;
+        gameObjPos.y = posY;
+    }
+    public Point getGameObjPos()
+    {
+        return gameObjPos;
+    }
+    public int getGameObjWidth()
+    {
+        return gameObjWidth;
+    }
+    public int getGameObjHeight()
+    {
+        return gameObjHeight;
+    }
+    public GameObject(int posX, int posY, int width, int height, String path)
+    {
+//        this.gameObjPosX = posX;
+//        this.gameObjPosY = posY;
+        this.gameObjPos = new Point(posX, posY);
         this.gameObjWidth = width;
         this.gameObjHeight = height;
+        this.gameObjSprite = loadSprite(path, this.gameObjWidth, this.gameObjHeight);
     }
     protected Image loadSprite(String path, int width, int height)
     {
@@ -28,7 +47,8 @@ public abstract class GameObject {
     protected void updateCollider()
     {
         if(gameObjCollider != null)
-            gameObjCollider.collider.setLocation(gameObjPosX,gameObjPosY);
-        throw new RuntimeException("gameObjCollider is null");
+            gameObjCollider.collider.setLocation(gameObjPos.x,gameObjPos.y);
+        else
+            throw new RuntimeException("gameObjCollider is null");
     }
 }

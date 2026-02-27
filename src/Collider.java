@@ -6,11 +6,11 @@ public class Collider {
     private int colliderArea;
     protected Rectangle collider;
 
-    public Collider(int width, int height) {
+    public Collider(int posX, int posY,int width, int height) {
         colliderWidth = width;
         colliderHeight = height;
         colliderArea = colliderHeight * colliderWidth;
-        collider = new Rectangle(colliderWidth, colliderHeight);
+        collider = new Rectangle(posX, posY,colliderWidth, colliderHeight);
     }
 
     public boolean Collided(Rectangle other) {
