@@ -1,21 +1,16 @@
 public class GameManager  {
-    private static int remainingHits;
     private static int gameScore;
     private static final int hitScore = 10;
     private static boolean ballAlive;
 
     private GameManager() {}
-    public static int getRemainingHits()
-    {
-        return remainingHits;
-    }
+//    public static int getRemainingHits()
+//    {
+//        return remainingHits;
+//    }
     public static int getGameScore()
     {
         return gameScore;
-    }
-    public static void setRemainingHits(int hits)
-    {
-        remainingHits = hits;
     }
     public static void  setGameScore(int score)
     {
@@ -26,7 +21,7 @@ public class GameManager  {
     public static boolean getBallLife(){return ballAlive;}
     public static boolean isWin()
     {
-        return (remainingHits >=0 && ballAlive && GamePanel.bricksObj.isEmpty());
+        return (ballAlive && GamePanel.bricksObj.isEmpty());
     }
-    public static boolean isLose(){return (remainingHits == 0 || !ballAlive);}
+    public static boolean isLose(){return (!ballAlive);}
 }

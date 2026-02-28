@@ -28,7 +28,7 @@ public class Paddle extends GameObject{
     public void onHit()
     {
 
-        GameManager.setRemainingHits(GameManager.getRemainingHits()-1);
+        //GameManager.setRemainingHits(GameManager.getRemainingHits()-1);
     }
     @Override
     public void update()

@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Random;
 
 
@@ -38,6 +39,7 @@ public class GamePanel extends JPanel {
 
     private Collider ballCollider;
     private Collider paddleCollider;
+    private Image backgroundImage;
 
 
     public GamePanel()
@@ -58,13 +60,14 @@ public class GamePanel extends JPanel {
         paddleObjPath = "/UIElements/paddle.png";
 
         GameManager.setGameScore(0);
-        GameManager.setRemainingHits(30);
         GameManager.setBallLife(true);
 
 
 
 
         inputHandler = new InputHandler();
+
+        backgroundImage = new ImageIcon(Objects.requireNonNull(getClass().getResource("/UIElements/background.png"))).getImage();
 
         this.setPreferredSize(new Dimension(800, 600));
         this.setBackground(Color.blue);
@@ -75,6 +78,7 @@ public class GamePanel extends JPanel {
 
 
         bricksObj = new ArrayList<>();
+
         ballObj = new Ball(ballObjPos.x,
                 ballObjPos.y,
                 ballObjWidth,
@@ -134,6 +138,12 @@ public class GamePanel extends JPanel {
     protected void paintComponent(Graphics g)
     {
         super.paintComponent(g);
+        g.drawImage(backgroundImage,
+                0,
+                0,
+                getWidth(),
+                getHeight(),
+                null);
         g.drawImage(ballObj.getGameObjSprite(),
                 ballObj.getGameObjPos().x,
                 ballObj.getGameObjPos().y,
@@ -160,12 +170,12 @@ public class GamePanel extends JPanel {
     private void createGameText(Graphics g) //maybe set it in BBUI
     {
         JLabel gameScoreLabel;
-        JLabel remainingHitsLabel;
+//        JLabel remainingHitsLabel;
         gameScoreLabel = new JLabel("Game Score: " + GameManager.getGameScore());
-        remainingHitsLabel = new JLabel("Remaining Hits: " + GameManager.getRemainingHits());
+        //remainingHitsLabel = new JLabel("Remaining Hits: " + GameManager.getRemainingHits());
         g.setFont(new Font(Font.SERIF, Font.BOLD, 18));
         g.drawString(gameScoreLabel.getText(), 10, 500);
-        g.drawString(remainingHitsLabel.getText(), 325, 580);
+        //g.drawString(remainingHitsLabel.getText(), 325, 580);
         if (GameManager.isWin()) {
             g.setColor(new Color(0, 0, 0, 150)); // semi transparent black overlay
             g.fillRect(0, 0, getWidth(), getHeight());
@@ -178,7 +188,7 @@ public class GamePanel extends JPanel {
             g.fillRect(0, 0, getWidth(), getHeight());
             g.setColor(Color.RED);
             g.setFont(new Font(Font.SERIF, Font.BOLD, 50));
-            g.drawString("LOSER NIGGER!!", 200, 300);
+            g.drawString("LOOOSE", 200, 300);
         }
     }
     private void gameWon()
@@ -314,7 +324,6 @@ public class GamePanel extends JPanel {
     private void restartGame()
     {
         GameManager.setGameScore(0);
-        GameManager.setRemainingHits(30);
         GameManager.setBallLife(true);
 
         ballObj.setGameObjPos(ballObjPos.x, ballObjPos.y);
