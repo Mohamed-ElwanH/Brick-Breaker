@@ -1,10 +1,10 @@
 public class BoxCollider extends Collider {
 
     private GameObject gameObject;
-    public BoxCollider(int posX, int posY, int width, int height, GameObject other)
+    public BoxCollider(int posX, int posY, int width, int height, GameObject colliderParent)
     {
         super(posX, posY, width, height);
-        this.gameObject = other;
+        this.gameObject = colliderParent;
     }
 
     @Override

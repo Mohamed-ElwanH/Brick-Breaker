@@ -3,18 +3,15 @@ import java.awt.*;
 import java.net.URL;
 
 public abstract class GameObject {
-    protected Collider gameObjCollider;
-    protected final Image gameObjSprite;
-//    protected int gameObjPosX;
-//    protected int gameObjPosY;
+    private Collider gameObjCollider;
+    private Image gameObjSprite;
+
     private  Point gameObjPos;
     private int gameObjWidth;
     private int gameObjHeight;
 
     public GameObject(int posX, int posY, int width, int height, String path)
     {
-//        this.gameObjPosX = posX;
-//        this.gameObjPosY = posY;
         this.gameObjPos = new Point(posX, posY);
         this.gameObjWidth = width;
         this.gameObjHeight = height;
@@ -31,9 +28,17 @@ public abstract class GameObject {
     protected void updateCollider()
     {
         if(gameObjCollider != null)
-            gameObjCollider.collider.setLocation(gameObjPos.x,gameObjPos.y);
+            gameObjCollider.getCollider().setLocation(gameObjPos.x,gameObjPos.y);
         else
             throw new RuntimeException("gameObjCollider is null");
+    }
+    public void setGameObjSprite(Image other)
+    {
+        this.gameObjSprite = other;
+    }
+    public Image getGameObjSprite()
+    {
+        return this.gameObjSprite;
     }
     public void setGameObjPos(int posX, int posY)
     {
@@ -54,6 +59,7 @@ public abstract class GameObject {
     {
         return gameObjHeight;
     }
-
+    public Collider getGameObjCollider(){return gameObjCollider;}
+    public void setGameObjCollider(Collider other){this.gameObjCollider = other;}
 
 }

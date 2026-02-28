@@ -9,10 +9,10 @@ public class Ball extends GameObject{
         super(posX, posY, width, height, path);
         this.ballSpeedX = speedX;
         this.ballSpeedY = speedY;
-        this.gameObjCollider = new BallCollider(this.getGameObjPos().x,
+        this.setGameObjCollider(new BallCollider(this.getGameObjPos().x,
                 this.getGameObjPos().y,
                 this.getGameObjWidth(),
-                this.getGameObjHeight(), this);
+                this.getGameObjHeight(), this));
 
     }
     public void setBallSpeed(int speedX, int speedY)
@@ -33,8 +33,8 @@ public class Ball extends GameObject{
     }
     public void checkSideCollision(Brick brick)
     {
-        Rectangle ballRect = this.gameObjCollider.getCollider();
-        Rectangle brickRect = brick.gameObjCollider.getCollider();
+        Rectangle ballRect = this.getGameObjCollider().getCollider();
+        Rectangle brickRect = brick.getGameObjCollider().getCollider();
         if(ballRect.intersects(brickRect)) {
             double ballTop = ballRect.getMinY();
             double ballBottom = ballRect.getMaxY();
@@ -62,6 +62,19 @@ public class Ball extends GameObject{
             brick.onHit();
         }
     }
+    public void checkPaddleCollision(Paddle paddleObj)
+    {
+        Rectangle ballRect = this.getGameObjCollider().getCollider();
+        Rectangle paddleRect = paddleObj.getGameObjCollider().getCollider();
+        if(ballRect.intersects(paddleRect))
+        {
+            this.setGameObjPos(this.getGameObjPos().x, paddleObj.getGameObjPos().y - this.getGameObjHeight());
+            this.setBallSpeed(this.getBallSpeed().x, -Math.abs(this.getBallSpeed().y));
+        }
+
+
+    }
+
     @Override
     public void update()
     {

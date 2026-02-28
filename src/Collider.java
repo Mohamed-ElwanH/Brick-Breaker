@@ -4,7 +4,7 @@ public abstract class Collider {
     private int colliderWidth;
     private int colliderHeight;
     private int colliderArea;
-    protected Rectangle collider;
+    private Rectangle collider;
 
     public Collider(int posX, int posY,int width, int height) {
         colliderWidth = width;
