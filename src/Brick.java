@@ -30,6 +30,7 @@ public class Brick extends GameObject {
     @Override
     public void onHit()
     {
+        GameManager.setGameScore(GameManager.getGameScore()+GameManager.getHitScore());
         if(hitsToBreak > 0)
         {
             hitsToBreak--;
@@ -46,6 +47,7 @@ public class Brick extends GameObject {
         }
         if(hitsToBreak == 0)
             isDestroyed = true;
+
     }
 
 }

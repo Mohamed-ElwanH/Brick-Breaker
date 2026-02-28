@@ -74,7 +74,6 @@ public class Ball extends GameObject{
 
 
     }
-
     @Override
     public void update()
     {
