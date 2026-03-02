@@ -135,7 +135,7 @@ public class GamePanel extends JPanel {
                 ballObj.checkSideCollision(brick);
 
         }
-        GameManager.setNewHighScore(GameManager.getGameScore());
+
         gameWon();
         gameLost();
 
@@ -194,6 +194,7 @@ public class GamePanel extends JPanel {
     {
         if(GameManager.isWin())
         {
+            GameManager.setNewHighScore(GameManager.getGameScore());
             gameLoop.stop();
             repaint();
         }
@@ -202,6 +203,7 @@ public class GamePanel extends JPanel {
     {
         if(GameManager.isLose())
         {
+            GameManager.setNewHighScore(GameManager.getGameScore());
             repaint();
         }
     }

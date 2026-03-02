@@ -8,8 +8,6 @@ public class GameManager  {
     private GameManager() {}
     public static void loadHighScore() throws IOException {
         File file = new File("F://Repository//Brick Breaker Game//Brick Breaker//src//highscore.txt");
-
-//        String[] files =
         try
         {
             FileReader reader = new FileReader(file);
