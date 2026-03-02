@@ -1,5 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Objects;
@@ -7,7 +8,6 @@ import java.util.Random;
 
 
 public class GamePanel extends JPanel {
-    //GameObjects
     private Ball ballObj;
 
     private Paddle paddleObj;
@@ -33,19 +33,19 @@ public class GamePanel extends JPanel {
 
     protected static ArrayList<Brick> bricksObj;
 
-    private InputHandler inputHandler;
+    private final InputHandler inputHandler;
 
 
 
     private Collider ballCollider;
     private Collider paddleCollider;
-    private Image backgroundImage;
+    private final Image backgroundImage;
 
 
     public GamePanel()
     {
         ballObjPos = new Point(400-15, 470);
-        ballObjSpeed = new Point(8, 8); //maybe make a difficulty level and make the ball speed based on it
+        ballObjSpeed = new Point(7, 7);
         ballObjWidth = 30;
         ballObjHeight = 30;
         brickObjWidth = 80;
@@ -61,6 +61,14 @@ public class GamePanel extends JPanel {
 
         GameManager.setGameScore(0);
         GameManager.setBallLife(true);
+        try {
+            GameManager.loadHighScore();
+        }
+        catch (IOException e)
+        {
+            System.out.println(e.getMessage());
+        }
+
 
 
 
@@ -74,7 +82,6 @@ public class GamePanel extends JPanel {
         this.setFocusable(true);
         this.addKeyListener(inputHandler);
         this.requestFocusInWindow();
-
 
 
         bricksObj = new ArrayList<>();
@@ -106,12 +113,11 @@ public class GamePanel extends JPanel {
         if(GameManager.isLose())
         {
             if(InputHandler.isEnterKeyPressed())
-            {
                 restartGame();
-                //InputHandler.setEnterKey(false);
-            }
             return;
         }
+        if(InputHandler.isPaused())
+            return;
         ballObj.update();
         ballObj.checkPaddleCollision(paddleObj);
         paddleObj.movePaddle(inputHandler);
@@ -129,6 +135,7 @@ public class GamePanel extends JPanel {
                 ballObj.checkSideCollision(brick);
 
         }
+        GameManager.setNewHighScore(GameManager.getGameScore());
         gameWon();
         gameLost();
 
@@ -170,36 +177,23 @@ public class GamePanel extends JPanel {
     private void createGameText(Graphics g) //maybe set it in BBUI
     {
         JLabel gameScoreLabel;
-//        JLabel remainingHitsLabel;
+        JLabel highscore;
         gameScoreLabel = new JLabel("Game Score: " + GameManager.getGameScore());
-        //remainingHitsLabel = new JLabel("Remaining Hits: " + GameManager.getRemainingHits());
+        highscore = new JLabel("Highscore: "+ Integer.toString(GameManager.getHighscore()));
         g.setFont(new Font(Font.SERIF, Font.BOLD, 18));
         g.drawString(gameScoreLabel.getText(), 10, 500);
-        //g.drawString(remainingHitsLabel.getText(), 325, 580);
-        if (GameManager.isWin()) {
-            g.setColor(new Color(0, 0, 0, 150)); // semi transparent black overlay
-            g.fillRect(0, 0, getWidth(), getHeight());
-            g.setColor(Color.GREEN);
-            g.setFont(new Font(Font.SERIF, Font.BOLD, 50));
-            g.drawString("GAME WON!!", 200, 300);
-        }
-        if (GameManager.isLose()) {
-            g.setColor(new Color(0, 0, 0, 150));
-            g.fillRect(0, 0, getWidth(), getHeight());
-            g.setColor(Color.RED);
-            g.setFont(new Font(Font.SERIF, Font.BOLD, 50));
-            g.drawString("LOOOSE", 200, 300);
-        }
+        g.drawString(highscore.getText(), 10, 530);
+        if (GameManager.isWin())
+            winScreen(g);
+        if (GameManager.isLose())
+            loseScreen(g);
+        if(InputHandler.isPaused())
+            pauseScreen(g);
     }
     private void gameWon()
     {
         if(GameManager.isWin())
         {
-
-            JLabel winLabel = new JLabel("GAME WON!!");
-            winLabel.setFont(new Font(Font.SERIF, Font.BOLD, 30));
-
-
             gameLoop.stop();
             repaint();
         }
@@ -208,20 +202,38 @@ public class GamePanel extends JPanel {
     {
         if(GameManager.isLose())
         {
-//            JLabel loseLabel = new JLabel("LOSER NIGGER!!");
-//            loseLabel.setFont(new Font(Font.SERIF, Font.BOLD, 30));
-//            loseLabel.setHorizontalTextPosition(SwingConstants.CENTER);
-//            loseLabel.setVerticalTextPosition(SwingConstants.CENTER);
-//            this.add(loseLabel);
-//            gameLoop.stop();
-//            if(InputHandler.isEnterKeyPressed())
-//                restartGame();
             repaint();
         }
     }
+    private void winScreen(Graphics g)
+    {
+        g.setColor(new Color(0, 0, 0, 150));
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(Color.GREEN);
+        g.setFont(new Font(Font.SERIF, Font.BOLD, 50));
+        g.drawString("GAME WON!!", 225, 300);
+    }
+    private void loseScreen(Graphics g)
+    {
+        g.setColor(new Color(0, 0, 0, 150));
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(Color.RED);
+        g.setFont(new Font(Font.SERIF, Font.BOLD, 50));
+        g.drawString("LOOOSE!!!", 280, 300);
+        g.setFont(new Font(Font.SERIF, Font.BOLD, 30));
+        g.drawString("Press enter to restart", 280, 350);
+    }
+    private void pauseScreen(Graphics g)
+    {
+        g.setColor(new Color(0, 0, 0, 150));
+        g.fillRect(0, 0, getWidth(), getHeight());
+        g.setColor(Color.RED);
+        g.setFont(new Font(Font.SERIF, Font.BOLD, 50));
+        g.drawString("Paused",325, 300);
+    }
     private void checkBallBorderCollision()
     {
-        if(this.getWidth() == 0 || this.getHeight() ==0)
+        if(this.getWidth() == 0 || this.getHeight() == 0)
             return;
         if(ballObj.getGameObjPos().x <= 0)
         {
@@ -247,11 +259,6 @@ public class GamePanel extends JPanel {
         if(ballObj.getGameObjPos().y>=(this.getHeight()-ballObj.getGameObjHeight()))//TO DO: change so that the player loses a life
         {
             GameManager.setBallLife(false);
-
-//            ballObj.setGameObjPos(ballObj.getGameObjPos().x, this.getHeight()-ballObj.getGameObjHeight());
-//            int speedX = ballObj.getBallSpeed().x;
-//            int invertedSpeedY = -ballObj.getBallSpeed().y;
-//            ballObj.setBallSpeed(speedX, invertedSpeedY);
         }
     }
     private void checkPaddleBorderCollision()
@@ -261,14 +268,10 @@ public class GamePanel extends JPanel {
         if(paddleObj.getGameObjPos().x <= 0)
         {
             paddleObj.setGameObjPos(0, paddleObj.getGameObjPos().y);//so the paddle doesn't get stuck
-//            int invertedSpeedX = -paddleObj.getPaddleSpeedX();
-//            paddleObj.setPaddleSpeedX(invertedSpeedX);
         }
         if(paddleObj.getGameObjPos().x >= (this.getWidth()-paddleObj.getGameObjWidth()))
         {
             paddleObj.setGameObjPos(this.getWidth()-paddleObj.getGameObjWidth(), paddleObj.getGameObjPos().y);//so the paddle doesn't get stuck
-//            int invertedSpeedX = -paddleObj.getPaddleSpeedX();
-//            paddleObj.setPaddleSpeedX(invertedSpeedX);
         }
     }
     private String chooseRandomBrick()
@@ -321,8 +324,7 @@ public class GamePanel extends JPanel {
             }
         }
     }
-    private void restartGame()
-    {
+    private void restartGame() {
         GameManager.setGameScore(0);
         GameManager.setBallLife(true);
 
@@ -337,10 +339,4 @@ public class GamePanel extends JPanel {
         gameLoop.start();
         repaint();
     }
-
-
 }
-
-
-//TO DO: paddle, instantiate bricks, input handling
-//set hp for bricks

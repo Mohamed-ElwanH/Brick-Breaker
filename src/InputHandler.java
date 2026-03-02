@@ -12,8 +12,6 @@ public class InputHandler extends KeyAdapter {
         leftKeyPressed = false;
         paused = false;
         enterKeyPressed = false;
-
-
     }
     @Override
     public void keyPressed(KeyEvent e)
@@ -24,11 +22,8 @@ public class InputHandler extends KeyAdapter {
             leftKeyPressed = true;
         if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
         {
-            paused = !paused;
-            if(paused)
-                GamePanel.gameLoop.stop();
-            else
-                GamePanel.gameLoop.start();
+            if(!GameManager.isLose() && !GameManager.isWin())
+                paused = !paused;
         }
         if(e.getKeyCode() == KeyEvent.VK_ENTER)
             enterKeyPressed = true;

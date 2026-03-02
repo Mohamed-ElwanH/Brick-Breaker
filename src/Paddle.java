@@ -25,11 +25,7 @@ public class Paddle extends GameObject{
         paddleSpeedX = speedX;
     }
     @Override
-    public void onHit()
-    {
-
-        //GameManager.setRemainingHits(GameManager.getRemainingHits()-1);
-    }
+    public void onHit() {}
     @Override
     public void update()
     {
