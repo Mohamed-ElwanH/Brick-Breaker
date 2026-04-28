@@ -5,12 +5,14 @@ public class GameManager  {
     private static int highscore;
     private static final int hitScore = 10;
     private static boolean ballAlive;
+    private static final File HIGHSCORE_FILE = new File("highscore.txt");
+
     private GameManager() {}
+
     public static void loadHighScore() throws IOException {
-        File file = new File("F://Repository//Brick Breaker Game//Brick Breaker//src//highscore.txt");
         try
         {
-            FileReader reader = new FileReader(file);
+            FileReader reader = new FileReader(HIGHSCORE_FILE);
             int c;
             StringBuilder sb = new StringBuilder();
             while ((c = reader.read()) != -1) {
@@ -36,19 +38,19 @@ public class GameManager  {
             highscore = 0;
         }
     }
+
     private static void setHighscore(int newHighScore)
     {
-        File file = new File("F:/Repository/Brick Breaker Game/Brick Breaker/src/highscore.txt");
         try {
-            FileWriter writer = new FileWriter(file);
+            FileWriter writer = new FileWriter(HIGHSCORE_FILE);
             writer.write(String.valueOf(newHighScore));
             writer.close();
         }
         catch (IOException e) {
             System.out.println("Error saving highscore");
         }
-
     }
+
     public static int getGameScore() {return gameScore;}
     public static int getHighscore(){return highscore;}
     public static void setNewHighScore(int newHighScore)
